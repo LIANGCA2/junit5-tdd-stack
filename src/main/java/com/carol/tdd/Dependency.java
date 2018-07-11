@@ -1,4 +1,4 @@
-package com.thoughtworks.tdd;
+package com.carol.tdd;
 
 public class Dependency {
     public String say(){

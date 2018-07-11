@@ -1,4 +1,4 @@
-package com.thoughtworks.tdd;
+package com.carol.tdd;
 
 /**
  * Created by twer on 3/28/14.
