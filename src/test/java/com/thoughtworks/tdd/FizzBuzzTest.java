@@ -88,5 +88,15 @@ public class FizzBuzzTest {
         //then
         assertThat(result,is("FizzBuzzWhizz"));
     }
+    @Test
+    public void should_retrun_Fizz_when_input_35() {
+        //given
+        int input = 35;
+        //when
+        FizzBuzz fizzBuzz = new FizzBuzz();
+        String result = fizzBuzz.fizzBuzz(input);
+        //then
+        assertThat(result,is("Fizz"));
+    }
 
 }
