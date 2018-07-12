@@ -26,7 +26,10 @@ public class ParkingLot {
     }
 
     public Car unPark(Receipt receipt) {
-        return parkCarMap.remove(receipt);
+        if(parkCarMap.containsKey(receipt)){
+            return parkCarMap.remove(receipt);
+        }
+        return null;
     }
 
     public boolean findCarByReceipt(Receipt receipt) {

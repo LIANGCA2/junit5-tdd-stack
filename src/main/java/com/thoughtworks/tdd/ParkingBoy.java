@@ -10,7 +10,7 @@ public class ParkingBoy {
 
     public Receipt park(Car theCar) {
         for(int i = 0;i<parkingLotArrayList.size();i++){
-            if(!parkingLotArrayList.get(i).isFull()||(i == parkingLotArrayList.size()&&parkingLotArrayList.get(i).isFull()))
+            if(!parkingLotArrayList.get(i).isFull()||(parkingLotArrayList.get(i).isFull()&&i == parkingLotArrayList.size()-1))
             {
                 return parkingLotArrayList.get(i).park(theCar);
             }
@@ -28,6 +28,10 @@ public class ParkingBoy {
     }
 
     public Car unPark(Receipt receipt) {
-       return findParkingLotByReceipt(receipt).unPark(receipt);
+        ParkingLot parkingLot = findParkingLotByReceipt(receipt);
+        if(parkingLot != null) {
+            return findParkingLotByReceipt(receipt).unPark(receipt);
+        }
+        return null;
     }
 }

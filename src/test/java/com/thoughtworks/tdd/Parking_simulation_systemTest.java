@@ -7,6 +7,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 
 public class Parking_simulation_systemTest {
@@ -86,29 +89,77 @@ public class Parking_simulation_systemTest {
         }
     }
 
+
+    @Test
+    public void should_park_success_when_call_park_car_given_a_not_full_parking_lot(){
+        ParkingBoy parkingBoy = new ParkingBoy();
+        ParkingLot parkingLot = mock(ParkingLot.class);
+        Car car = mock(Car.class);
+        Receipt receipt = mock(Receipt.class);
+        parkingBoy.addParkingLot(parkingLot);
+        when(parkingLot.isFull()).thenReturn(false);
+        when(parkingLot.park(car)).thenReturn(receipt);
+        parkingBoy.park(car);
+        verify(parkingLot).park(car);
+
+    }
+
+
+    @Test
+    public void should_unpark_success_when_taken_car(){
+        ParkingBoy parkingBoy = new ParkingBoy();
+        ParkingLot parkingLot = new ParkingLot(1);
+        Car car = mock(Car.class);
+        parkingBoy.addParkingLot(parkingLot);
+        Receipt receipt = parkingBoy.park(car);
+        assertThat(parkingBoy.unPark(receipt),is(car));
+    }
+
+    @Test
+    public void should_unpark_fail_when_taken_car_by_error_receipt(){
+        ParkingBoy parkingBoy = new ParkingBoy();
+        ParkingLot parkingLot = new ParkingLot(1);
+        Car car = mock(Car.class);
+        parkingBoy.addParkingLot(parkingLot);
+        Receipt receipt = parkingBoy.park(car);
+        Receipt anotherReceipt = mock(Receipt.class);
+        assertThat(parkingBoy.unPark(anotherReceipt),not(car));
+    }
+
+
+
     @Test
     public void should_park_first_parklot_when_call_park_car_given_a_not_full_parking_lot_(){
        ParkingBoy parkingBoy = new ParkingBoy();
-        ParkingLot parkingLot = new ParkingLot(1);
-        ParkingLot anotherParkingLot = new ParkingLot(1);
+        ParkingLot parkingLot = mock(ParkingLot.class);
+        ParkingLot anotherParkingLot =  mock(ParkingLot.class);
         parkingBoy.addParkingLot(parkingLot);
         parkingBoy.addParkingLot(anotherParkingLot);
         Car theCar = new Car();
-        Receipt receipt = parkingBoy.park(theCar);
-        assertThat(parkingBoy.findParkingLotByReceipt(receipt),is(parkingLot));
+        when(parkingLot.isFull()).thenReturn(false);
+        Receipt receipt = mock(Receipt.class);
+        when(parkingLot.park(theCar)).thenReturn(receipt);
+        parkingBoy.park(theCar);
+        verify(parkingLot).park(theCar);
 
     }
 
     @Test
     public void should_park_second_parklot_when_call_park_car_given_a_full_parking_lot_(){
+
         ParkingBoy parkingBoy = new ParkingBoy();
-        ParkingLot parkingLot = new ParkingLot(0);
-        ParkingLot anotherParkingLot = new ParkingLot(1);
+        ParkingLot parkingLot = mock(ParkingLot.class);
+        ParkingLot anotherParkingLot =  mock(ParkingLot.class);
         parkingBoy.addParkingLot(parkingLot);
         parkingBoy.addParkingLot(anotherParkingLot);
-        Car theCar = new Car();
-        Receipt receipt = parkingBoy.park(theCar);
-        assertThat(parkingBoy.findParkingLotByReceipt(receipt),is(anotherParkingLot));
+        Car theCar =mock(Car.class);
+        when(parkingLot.isFull()).thenReturn(true);
+        when(anotherParkingLot.isFull()).thenReturn(false);
+        Receipt receipt = mock(Receipt.class);
+        when(anotherParkingLot.park(theCar)).thenReturn(receipt);
+        parkingBoy.park(theCar);
+        verify(anotherParkingLot).park(theCar);
+
     }
 
 
@@ -119,10 +170,10 @@ public class Parking_simulation_systemTest {
         ParkingLot anotherParkingLot = new ParkingLot(1);
         parkingBoy.addParkingLot(parkingLot);
         parkingBoy.addParkingLot(anotherParkingLot);
-        Car theCar = new Car();
+        Car theCar = mock(Car.class);
         Receipt receipt = parkingBoy.park(theCar);
         parkingBoy.unPark(receipt);
-        Car anotherCar = new Car();
+        Car anotherCar = mock(Car.class);
         Receipt receipt1 = parkingBoy.park(anotherCar);
         assertThat(parkingBoy.findParkingLotByReceipt(receipt1),is(parkingLot));
     }
@@ -131,9 +182,9 @@ public class Parking_simulation_systemTest {
         ParkingBoy parkingBoy = new ParkingBoy();
         ParkingLot parkingLot = new ParkingLot(0);
         parkingBoy.addParkingLot(parkingLot);
-        Car theCar = new Car();
+        Car theCar = mock(Car.class);
         try {
-            parkingLot.park(theCar);
+            parkingBoy.park(theCar);
             fail("parkingLot is full.");
         }catch (ParkinglotException e){
         }
