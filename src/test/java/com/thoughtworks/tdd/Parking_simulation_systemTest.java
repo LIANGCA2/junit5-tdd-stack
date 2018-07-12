@@ -85,4 +85,59 @@ public class Parking_simulation_systemTest {
             fail("should park successfully");
         }
     }
+
+    @Test
+    public void should_park_first_parklot_when_call_park_car_given_a_not_full_parking_lot_(){
+       ParkingBoy parkingBoy = new ParkingBoy();
+        ParkingLot parkingLot = new ParkingLot(1);
+        ParkingLot anotherParkingLot = new ParkingLot(1);
+        parkingBoy.addParkingLot(parkingLot);
+        parkingBoy.addParkingLot(anotherParkingLot);
+        Car theCar = new Car();
+        Receipt receipt = parkingBoy.park(theCar);
+        assertThat(parkingBoy.findParkingLotByReceipt(receipt),is(parkingLot));
+
+    }
+
+    @Test
+    public void should_park_second_parklot_when_call_park_car_given_a_full_parking_lot_(){
+        ParkingBoy parkingBoy = new ParkingBoy();
+        ParkingLot parkingLot = new ParkingLot(0);
+        ParkingLot anotherParkingLot = new ParkingLot(1);
+        parkingBoy.addParkingLot(parkingLot);
+        parkingBoy.addParkingLot(anotherParkingLot);
+        Car theCar = new Car();
+        Receipt receipt = parkingBoy.park(theCar);
+        assertThat(parkingBoy.findParkingLotByReceipt(receipt),is(anotherParkingLot));
+    }
+
+
+    @Test
+    public void should_park_first_parklot_when_call_park_car_given_a_full_parking_lot_take_out_car(){
+        ParkingBoy parkingBoy = new ParkingBoy();
+        ParkingLot parkingLot = new ParkingLot(1);
+        ParkingLot anotherParkingLot = new ParkingLot(1);
+        parkingBoy.addParkingLot(parkingLot);
+        parkingBoy.addParkingLot(anotherParkingLot);
+        Car theCar = new Car();
+        Receipt receipt = parkingBoy.park(theCar);
+        parkingBoy.unPark(receipt);
+        Car anotherCar = new Car();
+        Receipt receipt1 = parkingBoy.park(anotherCar);
+        assertThat(parkingBoy.findParkingLotByReceipt(receipt1),is(parkingLot));
+    }
+    @Test
+    public void should_Fail_when_call_park_car_given_a_full_parking_lot(){
+        ParkingBoy parkingBoy = new ParkingBoy();
+        ParkingLot parkingLot = new ParkingLot(0);
+        parkingBoy.addParkingLot(parkingLot);
+        Car theCar = new Car();
+        try {
+            parkingLot.park(theCar);
+            fail("parkingLot is full.");
+        }catch (ParkinglotException e){
+        }
+    }
+
+
 }
