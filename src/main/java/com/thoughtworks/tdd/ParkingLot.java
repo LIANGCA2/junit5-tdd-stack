@@ -1,6 +1,7 @@
 package com.thoughtworks.tdd;
 
 import java.util.HashMap;
+import java.util.UUID;
 
 public class ParkingLot {
     private int size;
@@ -12,7 +13,7 @@ public class ParkingLot {
     public Receipt park(Car car) {
         if(!isFull()) {
 
-            Receipt receipt = new Receipt();
+            Receipt receipt = new Receipt(UUID.randomUUID().toString());
 
             parkCarMap.put(receipt,car);
             return receipt;
@@ -26,18 +27,28 @@ public class ParkingLot {
     }
 
     public Car unPark(Receipt receipt) {
-        if(parkCarMap.containsKey(receipt)){
-            return parkCarMap.remove(receipt);
+        Receipt key = findKeyFromParkCarMap(receipt);
+        if(key!=null) {
+            return parkCarMap.remove(key);
+        }
+
+        return null;
+    }
+
+    public Receipt findKeyFromParkCarMap(Receipt receipt) {
+        for(Receipt key:parkCarMap.keySet()){
+            if(key.getId().equals(receipt.getId())){
+                return key;
+            }
         }
         return null;
     }
 
     public boolean findCarByReceipt(Receipt receipt) {
-        for(Receipt key:parkCarMap.keySet()){
-            if(key.equals(receipt)){
-                return true;
-            }
+        if(findKeyFromParkCarMap(receipt)!=null){
+            return true;
+        }else{
+            return false;
         }
-        return false;
     }
 }
