@@ -1,49 +1,31 @@
 package com.thoughtworks.tdd;
 
 public class Result {
-    private  String result;
-    private  Integer choice;
-    private  Boolean parkingLotFullStatus;
+  private Boolean status;
+  private String reason;
 
-    public Result(String result, Integer choice) {
-        this.result = result;
-        this.choice = choice;
+    public Result() {
+
     }
 
-
-    public Result(String result) {
-        this.result = result;
+    public Result(Boolean status, String reason) {
+        this.status = status;
+        this.reason = reason;
     }
 
-
-
-    public void setResult(String result) {
-        this.result = result;
+    public Boolean getStatus() {
+        return status;
     }
 
-    public void setChoice(Integer choice) {
-        this.choice = choice;
+    public void setStatus(Boolean status) {
+        this.status = status;
     }
 
-    public void setParkingLotFullStatus(Boolean parkingLotFullStatus) {
-        this.parkingLotFullStatus = parkingLotFullStatus;
+    public String getReason() {
+        return reason;
     }
 
-    public Boolean getParkingLotFullStatus() {
-        return parkingLotFullStatus;
-    }
-
-    public Integer getChoice() {
-        return choice;
-    }
-
-    public String getResult() {
-        return result;
-    }
-
-    public Result(String result, Integer choice, Boolean parkingLotFullStatus) {
-        this.result = result;
-        this.choice = choice;
-        this.parkingLotFullStatus = parkingLotFullStatus;
+    public void setReason(String reason) {
+        this.reason = reason;
     }
 }

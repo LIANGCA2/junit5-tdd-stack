@@ -1,9 +1,21 @@
 package com.thoughtworks.tdd;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ParkingBoy {
+    private int parkingNumber = 0;
+
     private ArrayList<ParkingLot> parkingLotArrayList = new ArrayList<>();
+
+    public ArrayList<ParkingLot> getParkingLotArrayList() {
+        return parkingLotArrayList;
+    }
+
+    public void setParkingLotArrayList(ArrayList<ParkingLot> parkingLotArrayList) {
+        this.parkingLotArrayList = parkingLotArrayList;
+    }
 
     public ParkingBoy() {
     }
@@ -11,7 +23,10 @@ public class ParkingBoy {
     public ParkingBoy(ArrayList<ParkingLot> parkingLotArrayList) {
         this.parkingLotArrayList = parkingLotArrayList;
     }
-
+    public String getParkingNumber() {
+        this.parkingNumber++;
+        return String.format("%03d", this.parkingNumber);
+    }
     public void addParkingLot(ParkingLot parkingLot) {
         parkingLotArrayList.add(parkingLot);
     }
@@ -59,47 +74,19 @@ public class ParkingBoy {
         return null;
     }
 
-    public Result inputOperate(String input) {
-
-        return  checkInput(input);
-    }
-
-    public Result checkInput(String input) {
-        int choice = 0;
-        try {
-            choice = Integer.parseInt(input);
-        } catch (Exception e) {
-            System.out.println("非法指令，程序终止");
-           throw  new ParkinglotException();
-        }
-        return enterDiffBranchByDiffChoice(choice);
-    }
-
-    public Result enterDiffBranchByDiffChoice(int choice) {
-        //Result result = new Result();
-        if (!(choice == 1 || choice == 2)) {
-            return new Result("非法指令，请查证后再输", choice);
-        } else {
-            if (choice == 1) {
-                return new Result("停车", choice,checkParkingLotFullStatus());
-            } else {
-                return new Result("取车", choice);
-            }
-        }
-    }
-
-
-    public Result operateCarByInput(String input, Result result) {
-        if(result.getChoice()==1){
-            Car car = new Car(input);
-           return new Result(park(car).getId(),result.getChoice());
+    public Result deleteParkingLotById(String id) {
+        Result result = new Result();
+        List<ParkingLot> parkingLotList = parkingLotArrayList.stream().filter(parkingLot1 -> parkingLot1.getId().equals(id)).collect(Collectors.toList());
+        if(parkingLotList.size()==0){
+            result.setReason("此停车场不存在！");
+            result.setStatus(false);
+        }else if(parkingLotList.get(0).getParkCarMap().size()!=0){
+            result.setReason("此停车场中，依然停有汽车，无法删除！");
+            result.setStatus(false);
         }else{
-            Car car = unPark(new Receipt(input));
-            if(car != null){
-                return new Result(car.getLicensePlateNumber(),result.getChoice());
-            }else{
-                return new Result("",result.getChoice());
-            }
+            result.setStatus(true);
+            parkingLotArrayList.remove(parkingLotList.get(0));
         }
+        return result;
     }
 }
